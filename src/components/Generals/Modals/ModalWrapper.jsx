@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody } from 'flowbite-react';
 
 const ModalWrapper = ({ show, onClose, title, children }) => {
   return (
-    <Modal show={show} onClose={onClose} size="7xl">
+    <Modal show={show} onClose={onClose}>
       <ModalHeader>{title}</ModalHeader>
       <ModalBody>
         {children}

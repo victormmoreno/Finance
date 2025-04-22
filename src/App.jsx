@@ -10,21 +10,25 @@ import './App.css';
 
 const App = () => {
     return (
-        <Router>
-            <AlertClearer />
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="transactions" element={<TransactionList />} />
-                    <Route path="categories" element={
-                        <>
-                            <CategoryForm />
-                            <CategoryList />
-                        </>
-                    } />
-                </Route>
-            </Routes>
-        </Router>
+        <>
+        
+            <Router>
+                <AlertClearer />
+                <Routes>
+                
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="transactions" element={<TransactionList />} />
+                        <Route path="categories" element={
+                            <>
+                                <CategoryForm />
+                                <CategoryList />
+                            </>
+                        } />
+                    </Route>
+                </Routes>
+            </Router>
+        </>
     );
 };
 

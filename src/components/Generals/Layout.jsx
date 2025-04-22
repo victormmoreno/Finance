@@ -3,15 +3,28 @@ import { Sidebar, SidebarItems, SidebarItemGroup } from 'flowbite-react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { HiOutlineHome, HiOutlineCurrencyDollar } from "react-icons/hi";
 import { BiSolidCategoryAlt } from "react-icons/bi";
+import SimpleAlert from './Alerts/SimpleAlert';
+import useStore from '../../store/useStore';
+
 
 const Layout = () => {
+  const { alert } = useStore();
   const navItems = [
     { to: '/', icon: HiOutlineHome, label: 'Inicio' },
     { to: '/transactions', icon: HiOutlineCurrencyDollar, label: 'Transacciones' },
     { to: '/categories', icon: BiSolidCategoryAlt, label: 'Categorias' },
   ];
   return (
+    <>
     <div className="flex h-screen">
+    
+    {alert.visible && (
+      <div className='fixed top-4 right-4 z-50'>
+        <SimpleAlert className="alert fade-in fade-out fixed bottom-8 right-8" alertType={alert.type} />
+      </div>
+    )}
+    
+
       <Sidebar className="w-64" aria-label="Sidebar with navigation">
         <SidebarItems>
           <SidebarItemGroup>
@@ -37,6 +50,7 @@ const Layout = () => {
         <Outlet />
       </main>
     </div>
+    </>
   );
 };
 

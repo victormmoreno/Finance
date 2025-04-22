@@ -1,4 +1,4 @@
-import { Label, TextInput, HelperText } from 'flowbite-react';
+import { Label, TextInput, HelperText, Select, Button } from 'flowbite-react';
 
 const TransactionForm = ({
   description,
@@ -10,8 +10,11 @@ const TransactionForm = ({
   category,
   setCategory,
   categories,
+  errors,
   handleSubmit,
   onClose,
+  validateField,
+  isFormValid
 }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -23,39 +26,64 @@ const TransactionForm = ({
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          onBlur={(e) => validateField('description', e.target.value)}
           required
-          color="success"
+          color={errors.description ? 'failure' : 'success'}
         />
-        <HelperText>Descripción de la transacción</HelperText>
+        {errors.description ? (
+          <HelperText color="failure">{errors.description}</HelperText>
+        ) : (
+          <HelperText>Descripción de la transacción</HelperText>
+        )}
       </div>
       <div>
-        <label className="block mb-1 font-medium">Monto</label>
-        <input
+        <div className="mb-2 block">
+          <Label htmlFor="amount">Monto</Label>
+        </div>
+        <TextInput
+          id="amount"
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-2 border rounded"
+          onBlur={(e) => validateField('amount', e.target.value)}
           required
-          min="0"
-          step="0.01"
+          color={errors.amount ? 'failure' : 'success'}
         />
+        {errors.amount ? (
+          <HelperText color="failure">{errors.amount}</HelperText>
+        ) : (
+          <HelperText>Costo de la transacción</HelperText>
+        )}
       </div>
       <div>
-        <label className="block mb-1 font-medium">Fecha</label>
-        <input
+        <div className="mb-2 block">
+          <Label htmlFor="date">Fecha</Label>
+        </div>
+        <TextInput
+          id="date"
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full p-2 border rounded"
+          onBlur={(e) => validateField('date', e.target.value)}
           required
+          color={errors.date ? 'failure' : 'success'}
         />
+        {errors.date ? (
+          <HelperText color="failure">{errors.date}</HelperText>
+        ) : (
+          <HelperText>Fecha de la transacción</HelperText>
+        )}
       </div>
       <div>
-        <label className="block mb-1 font-medium">Categoría</label>
-        <select
-          value={category}
+        <div className="mb-2 block">
+          <Label htmlFor="category">Categoría</Label>
+        </div>
+        <Select 
+          id="category"
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 border rounded"
+          onBlur={(e) => validateField('category', e.target.value)}
+          value={category}
+          color={errors.category ? 'failure' : 'success'}
           required
         >
           {categories.map((cat) => (
@@ -63,15 +91,23 @@ const TransactionForm = ({
               {cat}
             </option>
           ))}
-        </select>
+        </Select>
+        {errors.category && (
+          <HelperText color="failure">{errors.category}</HelperText>
+        )}
       </div>
+
       <div className="flex justify-end space-x-2">
         <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
           Cancelar
         </button>
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <Button 
+          type="submit" 
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          disabled={!isFormValid()}
+        >
           Guardar
-        </button>
+        </Button>
       </div>
     </form>
   );

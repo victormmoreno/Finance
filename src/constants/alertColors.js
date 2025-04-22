@@ -2,7 +2,7 @@ const alertColors = {
   delete: 'green',
   create: 'green',
   info: 'blue',
-  warning: 'yellow',
+  warning: 'warning',
   error: 'red',
 };
 
