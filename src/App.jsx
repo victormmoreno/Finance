@@ -4,7 +4,8 @@ import Layout from './components/Generals/Layout';
 import Home from './components/Home';
 import TransactionList from './components/Transactions/TransactionList';
 import CategoryList from './components/Categories/CategoryList';
-import CategoryForm from './components/Categories/CategoryForm';
+// En el momento no está en uso
+// import CategoryForm from './components/Categories/CategoryForm';
 import AlertClearer from './components/Generals/Alerts/AlertClearer';
 import './App.css';
 
@@ -21,7 +22,7 @@ const App = () => {
                         <Route path="transactions" element={<TransactionList />} />
                         <Route path="categories" element={
                             <>
-                                <CategoryForm />
+                                {/* <CategoryForm /> */}
                                 <CategoryList />
                             </>
                         } />

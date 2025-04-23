@@ -98,12 +98,12 @@ const TransactionForm = ({
       </div>
 
       <div className="flex justify-end space-x-2">
-        <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
+        <button type="button" onClick={onClose} className="cursor-pointer px-4 py-2 border rounded">
           Cancelar
         </button>
         <Button 
           type="submit" 
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           disabled={!isFormValid()}
         >
           Guardar

@@ -7,11 +7,11 @@ const CreateButton = ({ handleAddClick }) => {
             onClick={handleAddClick}
             color="green"
             // disabled={disabled}
-            className="cursor-pointer fixed bottom-8 right-8 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg"
+            className="cursor-pointer text-white rounded-full w-17 h-17 flex items-center justify-center shadow-lg"
             aria-label="Agregar nueva transacción"
             title="Agregar nueva transacción"
         >
-            <IoMdAdd/>
+            <IoMdAdd className="h-7 w-7"/>
         </Button>
     );
 };

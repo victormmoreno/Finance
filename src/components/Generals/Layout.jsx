@@ -19,8 +19,8 @@ const Layout = () => {
     <div className="flex h-screen">
     
     {alert.visible && (
-      <div className='fixed top-4 right-4 z-50'>
-        <SimpleAlert className="alert fade-in fade-out fixed bottom-8 right-8" alertType={alert.type} />
+      <div className='fixed top-4 right-4 z-50 fade-in fade-out'>
+        <SimpleAlert className="alert fixed bottom-8 right-8" alertType={alert.type} />
       </div>
     )}
     

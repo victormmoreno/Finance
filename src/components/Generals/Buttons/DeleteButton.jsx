@@ -10,8 +10,8 @@ const DeleteButton = ({ item, removeItem, disabled = false }) => {
             onClick={() => removeItem(item)} // Pass the entire item object
             className="cursor-pointer"
         >
-            <MdDeleteForever className="mr-2 h-5 w-5" />
-            Eliminar
+            <MdDeleteForever className="h-5 w-5" />
+            {/* Eliminar */}
         </Button>
     );
 };

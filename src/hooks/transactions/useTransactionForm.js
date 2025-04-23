@@ -1,18 +1,23 @@
 import { useState } from 'react';
-import useStore from '../store/useStore';
-import { isRequired, minLength, isPositiveNumber, isNotFutureDate } from '../utils/validation';
+import useStore from '../../store/useStore';
+import { isRequired, minLength, isPositiveNumber, isNotFutureDate } from '../../utils/validation';
 
-const useTransactionForm = (initialTransaction, onClose) => {
+const useTransactionForm = () => {
   const addTransaction = useStore((state) => state.addTransaction);
   const updateTransaction = useStore((state) => state.updateTransaction);
+  const removeTransaction = useStore((state) => state.removeTransaction);
+  const setAlert = useStore((state) => state.setAlert);
+  const hideAlert = useStore((state) => state.hideAlert);
   const categoriesFromStore = useStore((state) => state.categories);
   const categories = categoriesFromStore || [];
-  
 
-  const [description, setDescription] = useState(initialTransaction ? initialTransaction.description : '');
-  const [amount, setAmount] = useState(initialTransaction ? initialTransaction.amount : '');
-  const [date, setDate] = useState(initialTransaction ? initialTransaction.date : '');
-  const [category, setCategory] = useState(initialTransaction ? initialTransaction.category : (categories.length > 0 ? categories[0] : ''));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
+  const [date, setDate] = useState('');
+  const [category, setCategory] = useState(categories.length > 0 ? categories[0] : '');
 
   const [errors, setErrors] = useState({});
 
@@ -23,7 +28,7 @@ const useTransactionForm = (initialTransaction, onClose) => {
     setCategory(transaction ? transaction.category : (categories.length > 0 ? categories[0] : ''));
     setErrors({});
   };
-  
+
   const validate = () => {
     const fields = { description, amount, date, category };
     const newErrors = {};
@@ -83,26 +88,55 @@ const useTransactionForm = (initialTransaction, onClose) => {
     if (!validate()) return;
 
     const transactionData = {
-      id: initialTransaction ? initialTransaction.id : Date.now(),
+      id: selectedTransaction ? selectedTransaction.id : Date.now(),
       description: description.trim(),
       amount: parseFloat(amount),
       date,
       category,
     };
 
-    if (initialTransaction) {
+    if (selectedTransaction) {
       updateTransaction(transactionData);
+      setAlert(`La transacción "${transactionData.description}" ha sido actualizada.`, 'info');
     } else {
       addTransaction(transactionData);
+      setAlert(`La transacción "${transactionData.description}" ha sido agregada.`, 'create');
     }
-    onClose();
+    setTimeout(() => {
+      hideAlert();
+    }, 3000);
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
+  };
+
+  const handleDelete = (transaction) => {
+    removeTransaction(transaction.id);
+    setAlert(`La transacción "${transaction.description}" ha sido borrada!`, 'delete');
+    setTimeout(() => {
+      hideAlert();
+    }, 3000);
+  };
+
+  const handleEditClick = (transaction) => {
+    setSelectedTransaction(transaction);
+    resetForm(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setSelectedTransaction(null);
+    resetForm(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
   };
 
   const isFormValid = () => {
-    // Check if all fields are valid by running validateField without side effects
     const fields = { description, amount, date, category };
     return Object.entries(fields).every(([fieldName, value]) => {
-      // Run validation logic without setting errors state
       switch (fieldName) {
         case 'description':
           return isRequired(value) && minLength(value, 3);
@@ -119,6 +153,8 @@ const useTransactionForm = (initialTransaction, onClose) => {
   };
 
   return {
+    isModalOpen,
+    selectedTransaction,
     description,
     setDescription,
     amount,
@@ -132,7 +168,10 @@ const useTransactionForm = (initialTransaction, onClose) => {
     handleSubmit,
     validateField,
     isFormValid,
-    resetForm,
+    handleDelete,
+    handleEditClick,
+    handleAddClick,
+    handleCloseModal,
   };
 };
 

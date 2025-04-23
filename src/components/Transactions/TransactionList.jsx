@@ -1,26 +1,20 @@
-import { useState } from 'react';
-import useStore from '../../store/useStore';
-import DeleteButton from '../Generals/Buttons/DeleteButton';
-import useInitializeTransactions from '../../hooks/useInitializeTransactions';
-// import SimpleAlert from '../Generals/Alerts/SimpleAlert';
+import useTransactionForm from '../../hooks/transactions/useTransactionForm';
+import useTransactionList from '../../hooks/transactions/useTransactionList';
 import TransactionForm from './TransactionForm';
-import ModalWrapper from '../Generals/Modals/ModalWrapper';
-import CreateButton from '../Generals/Buttons/CreateButton';
-import useTransactionForm from '../../hooks/useTransactionForm';
-import EditButton from '../Generals/Buttons/EditButton';
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
+import Table from '../Generals/Table';
 import Pagination from '../Generals/Pagination';
+import CreateButton from '../Generals/Buttons/CreateButton';
+import ModalWrapper from '../Generals/Modals/ModalWrapper';
+import DeleteButton from '../Generals/Buttons/DeleteButton';
+import EditButton from '../Generals/Buttons/EditButton';
+// import useStore from '../../store/useStore';
+// import useInitializeTransactions from '../../hooks/useInitializeTransactions';
 
 const TransactionList = () => {
-    const { transactions, removeTransaction, alert, setAlert, hideAlert } = useStore();
-    useInitializeTransactions();
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedTransaction, setSelectedTransaction] = useState(null);
-    const currentPage = useStore((state) => state.currentPage);
-    const setCurrentPage = useStore((state) => state.setCurrentPage);
 
     const {
+        isModalOpen,
+        selectedTransaction,
         description,
         setDescription,
         amount,
@@ -34,94 +28,67 @@ const TransactionList = () => {
         handleSubmit,
         validateField,
         isFormValid,
-        resetForm
-    } = useTransactionForm(selectedTransaction, () => setIsModalOpen(false));
+        // resetForm,
+        handleDelete,
+        handleEditClick,
+        handleAddClick,
+        handleCloseModal,
+    } = useTransactionForm();
 
-    const handleDelete = (transaction) => {
-        removeTransaction(transaction.id);
-        setAlert(`La transacción "${transaction.description}" ha sido borrada!`, `delete`);
 
-        setTimeout(() => {
-            hideAlert();
-        }, 3000);
-    };
+    const {
+        currentPage,
+        setCurrentPage,
+        totalPages,
+        currentTransactions,
+        columns,
+        totalAmount,
+        bulkActionsEnabled,
+    } = useTransactionList();
 
-    const handleEditClick = (transaction) => {
-        setSelectedTransaction(transaction);
-        resetForm(transaction);
-        setIsModalOpen(true);
-    };
+    const footer = (
+        <tr className="font-semibold text-gray-900 dark:text-white">
+            <th scope="row" className="px-6 py-3 text-base" colSpan={2}>Total</th>
+            <td className="px-6 py-3">
+                {totalAmount}
+            </td>
+        </tr>
+    );
 
-    const handleAddClick = () => {
-        setSelectedTransaction(null);
-        resetForm(null);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedTransaction(null);
-    };
-
-    // Pagination calculations
-    const itemsPerPage = 15;
-    const totalPages = Math.ceil(transactions.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentTransactions = transactions.slice(startIndex, startIndex + itemsPerPage);
+    const renderRowActions = (transaction) => (
+        <>
+            <DeleteButton
+                item={transaction}
+                removeItem={handleDelete}
+                disabled={alert.visible}
+            />
+            <EditButton
+                item={transaction}
+                editItem={() => handleEditClick(transaction)}
+                disabled={alert.visible}
+            />
+        </>
+    );
 
     return (
         <>
-            {/* {alert.visible && <SimpleAlert className="alert fade-in" alertType={alert.type} />} */}
-            <Table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <TableHead>
-                    <TableRow>
-                        <TableHeadCell scope="col" className="px-6 py-3">Transacción</TableHeadCell>
-                        <TableHeadCell scope="col" className="px-6 py-3">Monto</TableHeadCell>
-                        <TableHeadCell scope="col" className="px-6 py-3">Fecha de la transacción</TableHeadCell>
-                        <TableHeadCell scope="col" className="px-6 py-3">Opciones</TableHeadCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody className="divide-y" >
-                    {currentTransactions.map(transaction => (
-                        <TableRow
-                            key={transaction.id}
-                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-                        >
-                            <TableCell className="px-6 py-4">{transaction.description}</TableCell>
-                            <TableCell className="px-6 py-4">{transaction.amount}</TableCell>
-                            <TableCell className="px-6 py-4">{transaction.date}</TableCell>
-                            <TableCell className="px-6 py-4 flex flex-wrap gap-2">
-                                <DeleteButton
-                                    item={transaction}
-                                    removeItem={handleDelete}
-                                    disabled={alert.visible}
-                                />
-                                <EditButton
-                                    item={transaction}
-                                    editItem={() => handleEditClick(transaction)}
-                                    disabled={alert.visible}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-                <tfoot>
-                    <tr className="font-semibold text-gray-900 dark:text-white">
-                        <th scope="row" className="px-6 py-3 text-base">Total</th>
-                        <td className="px-6 py-3">
-                            {transactions.reduce((total, transaction) => total + Number(transaction.amount), 0)}
-                        </td>
-                    </tr>
-                </tfoot>
-            </Table>
+            <Table
+                columns={columns}
+                data={currentTransactions}
+                renderRowActions={renderRowActions}
+                footer={footer}
+                bulkActionsEnabled={bulkActionsEnabled}
+            />
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
             />
-            <CreateButton
-                handleAddClick={handleAddClick}
-            />
+            <div className='fixed bottom-8 right-8'>
+                <CreateButton
+                    handleAddClick={handleAddClick}
+                />
+            </div>
 
             <ModalWrapper show={isModalOpen} onClose={handleCloseModal} title={selectedTransaction ? "Editar Transacción" : "Registrar Nueva Transacción"}>
                 <TransactionForm

@@ -1,23 +1,27 @@
+import { Button } from "flowbite-react";
+
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div className="flex justify-center gap-4 mt-4">
-      <button
+      <Button
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        color='light'
+        className="px-4 py-2 rounded-lg disabled:opacity-50 cursor-pointer"
       >
         Anterior
-      </button>
+      </Button>
       <span className="px-4 py-2">
         Página {currentPage} de {totalPages}
       </span>
-      <button
+      <Button
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        color='light'
+        className="px-4 py-2 rounded-lg disabled:opacity-50 cursor-pointer"
       >
         Siguiente
-      </button>
+      </Button>
     </div>
   );
 };

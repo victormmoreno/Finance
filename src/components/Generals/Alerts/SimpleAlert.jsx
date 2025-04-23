@@ -10,14 +10,16 @@ const SimpleAlert = ({ alertType = 'delete' }) => {
     const ref = useRef();
     const { alert } = useStore();
     const [visible, setVisible] = useState(alert.visible);
-    // const [visible, setVisible] = useState(alert.visible);
+    const themeAlert = {
+        closeButton: {
+            base: 'cursor-pointer'
+        }
+    }
 
     const color = alertColors[alertType] || 'gray';
-    // const alertColor = colorMap[alertType] || 'gray';
-    
 
-    useFadeIn(ref, 500); // Fade in on mount
-    useFadeOut(ref, 500, visible); // Fade out on visible change
+    useFadeIn(ref, 500);
+    useFadeOut(ref, 500, visible);
 
     const handleClose = () => {
         setVisible(false);
@@ -25,7 +27,7 @@ const SimpleAlert = ({ alertType = 'delete' }) => {
 
     return (
         <>
-        <Alert ref={ref} color={color} icon={HiInformationCircle} onDismiss={handleClose}>
+        <Alert ref={ref} color={color} icon={HiInformationCircle} onDismiss={handleClose} theme={themeAlert}>
             {alert.message}
         </Alert>
         </>
