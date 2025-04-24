@@ -1,17 +1,13 @@
 import { useState } from 'react';
-  
-const useTable = (data, onSelectionChange) => {
-  
+
+const useTable = (data) => {
   const [selectedRowIds, setSelectedRowIds] = useState([]);
 
   const toggleSelectAll = () => {
     if (selectedRowIds.length === data.length) {
       setSelectedRowIds([]);
-      if (onSelectionChange) onSelectionChange([]);
     } else {
-      const allIds = data.map(row => row.id);
-      setSelectedRowIds(allIds);
-      if (onSelectionChange) onSelectionChange(data);
+      setSelectedRowIds(data.map(row => row.id));
     }
   };
 
@@ -23,17 +19,13 @@ const useTable = (data, onSelectionChange) => {
       newSelected = [...selectedRowIds, id];
     }
     setSelectedRowIds(newSelected);
-    if (onSelectionChange) {
-      const selectedRows = data.filter(row => newSelected.includes(row.id));
-      onSelectionChange(selectedRows);
-    }
   };
 
-  return { 
-    selectedRowIds, 
-    toggleSelectAll, 
-    toggleSelectRow 
-  }
+  return {
+    selectedRowIds,
+    toggleSelectAll,
+    toggleSelectRow,
+  };
+};
 
-}
 export default useTable;

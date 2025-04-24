@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useStore from '../../store/useStore';
 import useInitializeTransactions from '../../hooks/useInitializeTransactions';
 
-const useTransactionList = () => {
+const useTransactionList = ({handleDelete}) => {
     const { transactions, alert } = useStore();
     useInitializeTransactions();
 
@@ -23,6 +23,13 @@ const useTransactionList = () => {
     ];
 
     const bulkActionsEnabled = true;
+
+    const handleBulkDelete = (selectedRowIds) => {
+        const selectedTransactions = currentTransactions.filter(t => selectedRowIds.includes(t.id));
+        selectedTransactions.forEach(transaction => {
+            handleDelete(transaction);
+        });
+    };
 
     // const footer = (
     //     <tr className="font-semibold text-gray-900 dark:text-white">
@@ -56,7 +63,7 @@ const useTransactionList = () => {
         transactions,
         totalAmount,
         bulkActionsEnabled,
-        // renderRowActions,
+        handleBulkDelete,
     }
 }
 export default useTransactionList;

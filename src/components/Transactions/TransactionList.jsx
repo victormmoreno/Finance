@@ -1,5 +1,7 @@
 import useTransactionForm from '../../hooks/transactions/useTransactionForm';
 import useTransactionList from '../../hooks/transactions/useTransactionList';
+import useTable from '../../hooks/generals/useTable';
+import { useState } from 'react';
 import TransactionForm from './TransactionForm';
 import Table from '../Generals/Table';
 import Pagination from '../Generals/Pagination';
@@ -7,11 +9,9 @@ import CreateButton from '../Generals/Buttons/CreateButton';
 import ModalWrapper from '../Generals/Modals/ModalWrapper';
 import DeleteButton from '../Generals/Buttons/DeleteButton';
 import EditButton from '../Generals/Buttons/EditButton';
-// import useStore from '../../store/useStore';
-// import useInitializeTransactions from '../../hooks/useInitializeTransactions';
+import BulkActionToolbar from './BulkActionToolbar';
 
 const TransactionList = () => {
-
     const {
         isModalOpen,
         selectedTransaction,
@@ -28,13 +28,11 @@ const TransactionList = () => {
         handleSubmit,
         validateField,
         isFormValid,
-        // resetForm,
         handleDelete,
         handleEditClick,
         handleAddClick,
         handleCloseModal,
     } = useTransactionForm();
-
 
     const {
         currentPage,
@@ -42,52 +40,62 @@ const TransactionList = () => {
         totalPages,
         currentTransactions,
         columns,
+        transactions,
         totalAmount,
         bulkActionsEnabled,
-    } = useTransactionList();
+        handleBulkDelete,
+    } = useTransactionList({ handleDelete });
+    
+    const {
+        selectedRowIds,
+        toggleSelectAll,
+        toggleSelectRow
+    } = useTable(currentTransactions);
+    
 
-    const footer = (
-        <tr className="font-semibold text-gray-900 dark:text-white">
-            <th scope="row" className="px-6 py-3 text-base" colSpan={2}>Total</th>
-            <td className="px-6 py-3">
-                {totalAmount}
-            </td>
-        </tr>
-    );
 
     const renderRowActions = (transaction) => (
         <>
             <DeleteButton
                 item={transaction}
                 removeItem={handleDelete}
-                disabled={alert.visible}
+                disabled={false}
             />
             <EditButton
                 item={transaction}
                 editItem={() => handleEditClick(transaction)}
-                disabled={alert.visible}
+                disabled={false}
             />
         </>
     );
 
+    const footer = (
+        <tr className="font-semibold text-gray-900 dark:text-white">
+            <th scope="row" className="px-6 py-3 text-base" colSpan={2}>Total</th>
+            <td className="px-6 py-3">{totalAmount}</td>
+        </tr>
+    );
+
     return (
         <>
+            <BulkActionToolbar selectedCount={selectedRowIds.length} onDelete={() => handleBulkDelete(selectedRowIds)} />
             <Table
                 columns={columns}
                 data={currentTransactions}
                 renderRowActions={renderRowActions}
                 footer={footer}
                 bulkActionsEnabled={bulkActionsEnabled}
+                selectedRowIds={selectedRowIds}
+                toggleSelectAll={toggleSelectAll}
+                toggleSelectRow={toggleSelectRow}
             />
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
             />
-            <div className='fixed bottom-8 right-8'>
-                <CreateButton
-                    handleAddClick={handleAddClick}
-                />
+            <div className="fixed bottom-8 right-8">
+                <CreateButton handleAddClick={handleAddClick} />
             </div>
 
             <ModalWrapper show={isModalOpen} onClose={handleCloseModal} title={selectedTransaction ? "Editar Transacción" : "Registrar Nueva Transacción"}>

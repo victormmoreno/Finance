@@ -2,41 +2,7 @@ import React, { useState } from 'react';
 import useTable from '../../hooks/generals/useTable';
 import { Table as FlowbiteTable, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Checkbox } from 'flowbite-react';
 
-const Table = ({ columns, data, renderRowActions, footer, bulkActionsEnabled = false, onSelectionChange }) => {
-
-
-  const {
-    selectedRowIds, 
-    toggleSelectAll, 
-    toggleSelectRow 
-  } = useTable(data, onSelectionChange);
-  // const [selectedRowIds, setSelectedRowIds] = useState([]);
-
-  // const toggleSelectAll = () => {
-  //   if (selectedRowIds.length === data.length) {
-  //     setSelectedRowIds([]);
-  //     if (onSelectionChange) onSelectionChange([]);
-  //   } else {
-  //     const allIds = data.map(row => row.id);
-  //     setSelectedRowIds(allIds);
-  //     if (onSelectionChange) onSelectionChange(data);
-  //   }
-  // };
-
-  // const toggleSelectRow = (id) => {
-  //   let newSelected;
-  //   if (selectedRowIds.includes(id)) {
-  //     newSelected = selectedRowIds.filter(rowId => rowId !== id);
-  //   } else {
-  //     newSelected = [...selectedRowIds, id];
-  //   }
-  //   setSelectedRowIds(newSelected);
-  //   if (onSelectionChange) {
-  //     const selectedRows = data.filter(row => newSelected.includes(row.id));
-  //     onSelectionChange(selectedRows);
-  //   }
-  // };
-
+const Table = ({ columns, data, renderRowActions, footer, bulkActionsEnabled = false, selectedRowIds, toggleSelectAll, toggleSelectRow }) => {
 
   return (
     <>
