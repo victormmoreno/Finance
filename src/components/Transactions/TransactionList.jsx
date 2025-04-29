@@ -49,7 +49,8 @@ const TransactionList = () => {
     const {
         selectedRowIds,
         toggleSelectAll,
-        toggleSelectRow
+        toggleSelectRow,
+        clearSelection,
     } = useTable(currentTransactions);
     
 
@@ -78,7 +79,7 @@ const TransactionList = () => {
 
     return (
         <>
-            <BulkActionToolbar selectedCount={selectedRowIds.length} onDelete={() => handleBulkDelete(selectedRowIds)} />
+            <BulkActionToolbar selectedCount={selectedRowIds.length} onDelete={() => { handleBulkDelete(selectedRowIds); clearSelection(); }} />
             <Table
                 columns={columns}
                 data={currentTransactions}

@@ -5,6 +5,7 @@ import EditButton from '../Generals/Buttons/EditButton';
 import CreateButton from '../Generals/Buttons/CreateButton';
 import useCategoryList from '../../hooks/categories/useCategoryList';
 import useCategoryForm from '../../hooks/categories/useCategoryForm';
+import CategoryBulkActionToolbar from './CategoryBulkActionToolbar';
 
 const CategoryList = () => {
     const { alert } = useStore();
@@ -14,6 +15,10 @@ const CategoryList = () => {
         categories,
         handleDelete,
         handleNewCategory,
+        toggleSelectCategory,
+        selectedCategories,
+        handleBulkDelete,
+        clearSelection
         // setAlert,
         // hideAlert,
     } = useCategoryList();
@@ -30,9 +35,14 @@ const CategoryList = () => {
     return (
         <>
             <h2 className="text-lg font-semibold mb-2 dark:text-white">Categorías</h2>
+            <CategoryBulkActionToolbar selectedCategories={selectedCategories} handleDelete={() => {handleBulkDelete(selectedCategories); clearSelection()}} />
             <div className="flex flex-wrap shadow-lg rounded-lg items-center">
                 {categories.map((category) => (
-                    <Card className="max-w-sm p-7 m-3" key={category}>
+                    <Card 
+                        onClick={() => toggleSelectCategory(category)} 
+                        className={`max-w-sm p-7 m-3 ${selectedCategories.includes(category) ? 'bg-blue-200 dark:bg-blue-700' : 'bg-white dark:bg-gray-800' }`} 
+                        key={category}
+                      >
                             {isEditing === category ? (
                                 <>
                                     <input

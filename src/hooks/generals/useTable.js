@@ -21,10 +21,15 @@ const useTable = (data) => {
     setSelectedRowIds(newSelected);
   };
 
+  const clearSelection = () => {
+    setSelectedRowIds([]);
+  };
+
   return {
     selectedRowIds,
     toggleSelectAll,
     toggleSelectRow,
+    clearSelection,
   };
 };
 

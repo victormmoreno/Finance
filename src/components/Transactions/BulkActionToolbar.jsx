@@ -1,18 +1,8 @@
-import React, { useState } from 'react';
-import { Button, Badge } from 'flowbite-react';
+import React from 'react';
+import GeneralsBulkActionToolbar from '../Generals/BulkActionToolbar';
 
-const BulkActionToolbar = ({ selectedCount, onDelete }) => {
-  // const localSelectedCount = selectedCount;
-  if (selectedCount === 0) return null;
-  
-  return (
-    <div className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded mb-4">
-      <Badge color="info">{selectedCount} selected</Badge>
-      <Button color="failure" onClick={onDelete}>
-        Delete Selected
-      </Button>
-    </div>
-  );
+const BulkActionToolbar = (props) => {
+  return <GeneralsBulkActionToolbar {...props} moduleType="transaction" />;
 };
 
 export default BulkActionToolbar;
